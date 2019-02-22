@@ -34,7 +34,38 @@ class TowerOfHanoiGame(GameMaster):
             A Tuple of Tuples that represent the game state
         """
         ### student code goes here
-        pass
+        '''
+        if answer != []:
+            print("123",answer[0].bindings_dict[x],"123")
+            for disk in answer:
+                pass
+        
+        ask1 = parse_input("fact: (topof ?X peg1)")
+        answer = self.kb.kb_ask(ask1)
+        peglist1 = []
+
+        if answer != []:
+            print(answer.list_of_bindings[0][0].bindings_dict['?X'], '\n')
+        '''
+        ask1 = parse_input("fact: (topof ?X peg1)")
+        ask2 = parse_input("fact: (topof ?X peg2)")
+        ask3 = parse_input("fact: (topof ?X peg3)")
+        return(self.stateInPeg(ask1),self.stateInPeg(ask2), self.stateInPeg(ask3))
+
+
+    def stateInPeg(self, ask1):
+        answer = self.kb.kb_ask(ask1)
+        peglist1 = []
+        while answer != False:
+            # print(type(answer))
+            disk_peg = answer.list_of_bindings[0][0].bindings_dict['?X']
+            # print(type(disk_peg), '----------------', disk_peg)
+            peglist1.append(int(disk_peg[4:]))
+            ask1 = parse_input("fact: (top {} ?X)".format(disk_peg))
+            answer = self.kb.kb_ask(ask1)
+            # print(peglist1)
+        return tuple(peglist1)
+
 
     def makeMove(self, movable_statement):
         """
@@ -52,8 +83,78 @@ class TowerOfHanoiGame(GameMaster):
         Returns:
             None
         """
+        #str(movable_statement.terms[0].term) is disk1 str(movable_statement.terms[1].term) is peg1
         ### Student code goes here
-        pass
+        #if it is not a move
+        if movable_statement.predicate != 'movable':
+            return
+
+
+
+        ask3 = parse_input("fact: (top {} ?X)".format(str(movable_statement.terms[0].term)))
+        answer3 = self.kb.kb_ask(ask3)
+        if answer3 != False:
+            #print(answer3.list_of_bindings[0][0].bindings_dict['?X'], 'is blow')
+            r5 = parse_input("fact: (top {} {})".format(str(movable_statement.terms[0].term),
+                                                        str(answer3.list_of_bindings[0][0].bindings_dict['?X'])))
+            #print('retract', r5)
+            self.kb.kb_retract(r5)
+            a4 = parse_input("fact: (topof {} {})".format(str(answer3.list_of_bindings[0][0].bindings_dict['?X']),
+                                                          str(movable_statement.terms[1].term)))
+            #print('add', a4)
+            self.kb.kb_assert(a4)
+        else:
+            a5 = parse_input("fact: (empty {})".format(str(movable_statement.terms[1].term)))
+            #print('add', a5)
+            self.kb.kb_assert(a5)
+        target_empty = 0
+
+        ask1 = parse_input("fact: (empty ?X)")
+        answer1 = self.kb.kb_ask(ask1)
+        if answer1 != False:
+            for i in answer1.list_of_bindings:
+                # print(type(movable_statement.terms[2].term))
+                if str(movable_statement.terms[2].term) == i[0].bindings_dict['?X']:
+                    #print(movable_statement.terms[2], 'is empty')
+                    target_empty = 1
+
+        # term[2] is an empty peg
+        if target_empty:
+            r3 = parse_input("fact: (empty {})".format(str(movable_statement.terms[2].term)))
+            #print('retract', r3)
+            self.kb.kb_retract(r3)
+        else:
+            # term[2] is not an empty peg
+            ask2 = parse_input("fact: (topof ?X {})".format(str(movable_statement.terms[2].term)))
+            answer2 = self.kb.kb_ask(ask2)
+            if answer2 == False:
+                print("============={} has nothing on it!=================".format(str(movable_statement.terms[2].term)))
+            else:
+                r4 = parse_input("fact: (topof {} {})".format(str(answer2.list_of_bindings[0][0].bindings_dict['?X']),str(movable_statement.terms[2].term)))
+                #print('retract', r4)
+                self.kb.kb_retract(r4)
+                a3 = parse_input("fact: (top {} {})".format(str(movable_statement.terms[0].term), str(answer2.list_of_bindings[0][0].bindings_dict['?X'])))
+                #print('add', a3)
+                self.kb.kb_assert(a3)
+
+        r1 = parse_input(
+            "fact: (topof {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[1].term)))
+        #print('retract', r1)
+        self.kb.kb_retract(r1)
+        r2 = parse_input(
+            "fact: (on {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[1].term)))
+        #print('retract', r2)
+        self.kb.kb_retract(r2)
+        a1 = parse_input(
+            "fact: (topof {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[2].term)))
+        #print('add', a1)
+        self.kb.kb_assert(a1)
+        a2 = parse_input(
+            "fact: (on {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[2].term)))
+        #print('add', a2)
+        self.kb.kb_assert(a2)
+
+
 
     def reverseMove(self, movable_statement):
         """
