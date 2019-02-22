@@ -34,4 +34,10 @@ fact: (topof disk1 peg1)
 rule: ((larger ?x ?y) (larger ?y ?z)) -> (larger ?x ?z)
 rule: ((topof ?disk ?initial) (empty ?target)) -> (movable ?disk ?initial ?target)
 rule: ((topof ?diskx ?pegx) (topof ?disky ?pegy) (larger ?diskx ?disky)) -> (movable ?disky ?pegy ?pegx)
+"""
 rule: ((topof ?disky ?pegy) (topof ?diskx ?pegx) (larger ?diskx ?disky)) -> (movable ?disky ?pegy ?pegx)
+rule: ((larger ?diskx ?disky) (topof ?diskx ?pegx) (topof ?disky ?pegy)) -> (movable ?disky ?pegy ?pegx)
+rule: ((larger ?diskx ?disky) (topof ?disky ?pegy) (topof ?diskx ?pegx)) -> (movable ?disky ?pegy ?pegx)
+rule: ((topof ?diskx ?pegx) (larger ?diskx ?disky) (topof ?disky ?pegy)) -> (movable ?disky ?pegy ?pegx)
+rule: ((topof ?disky ?pegy) (larger ?diskx ?disky) (topof ?diskx ?pegx)) -> (movable ?disky ?pegy ?pegx)
+"""

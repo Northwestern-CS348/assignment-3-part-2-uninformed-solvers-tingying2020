@@ -90,6 +90,7 @@ class TowerOfHanoiGame(GameMaster):
             return
 
 
+        a1,a2,a3,a4,a5 = [], [],[],[],[]
 
         ask3 = parse_input("fact: (top {} ?X)".format(str(movable_statement.terms[0].term)))
         answer3 = self.kb.kb_ask(ask3)
@@ -102,11 +103,11 @@ class TowerOfHanoiGame(GameMaster):
             a4 = parse_input("fact: (topof {} {})".format(str(answer3.list_of_bindings[0][0].bindings_dict['?X']),
                                                           str(movable_statement.terms[1].term)))
             #print('add', a4)
-            self.kb.kb_assert(a4)
+            ##self.kb.kb_assert(a4)
         else:
             a5 = parse_input("fact: (empty {})".format(str(movable_statement.terms[1].term)))
             #print('add', a5)
-            self.kb.kb_assert(a5)
+            ##self.kb.kb_assert(a5)
         target_empty = 0
 
         ask1 = parse_input("fact: (empty ?X)")
@@ -119,7 +120,7 @@ class TowerOfHanoiGame(GameMaster):
                     target_empty = 1
 
         # term[2] is an empty peg
-        if target_empty:
+        if target_empty == 1:
             r3 = parse_input("fact: (empty {})".format(str(movable_statement.terms[2].term)))
             #print('retract', r3)
             self.kb.kb_retract(r3)
@@ -135,7 +136,7 @@ class TowerOfHanoiGame(GameMaster):
                 self.kb.kb_retract(r4)
                 a3 = parse_input("fact: (top {} {})".format(str(movable_statement.terms[0].term), str(answer2.list_of_bindings[0][0].bindings_dict['?X'])))
                 #print('add', a3)
-                self.kb.kb_assert(a3)
+                ##self.kb.kb_assert(a3)
 
         r1 = parse_input(
             "fact: (topof {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[1].term)))
@@ -148,12 +149,16 @@ class TowerOfHanoiGame(GameMaster):
         a1 = parse_input(
             "fact: (topof {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[2].term)))
         #print('add', a1)
-        self.kb.kb_assert(a1)
+        ##self.kb.kb_assert(a1)
         a2 = parse_input(
             "fact: (on {} {})".format(str(movable_statement.terms[0].term), str(movable_statement.terms[2].term)))
         #print('add', a2)
-        self.kb.kb_assert(a2)
+        ##self.kb.kb_assert(a2)
 
+        A05 = [a1,a2,a3,a4,a5]
+        for item in A05:
+            if item!=[]:
+                self.kb.kb_assert(item)
 
 
     def reverseMove(self, movable_statement):
