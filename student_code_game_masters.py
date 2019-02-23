@@ -255,7 +255,26 @@ class Puzzle8Game(GameMaster):
             None
         """
         ### Student code goes here
-        pass
+        if movable_statement.predicate != 'movable':
+            print("can't move")
+            return
+
+        term0 = movable_statement.terms[0].term.element
+        term1 = movable_statement.terms[1].term.element
+        term2 = movable_statement.terms[2].term.element
+        term3 = movable_statement.terms[3].term.element
+        term4 = movable_statement.terms[4].term.element
+
+        r1 = parse_input("fact: (at {} {} {})".format(term0, term1, term2))
+        self.kb.kb_retract(r1)
+        r2 = parse_input("fact: (empty {} {})".format(term3, term4))
+        self.kb.kb_retract(r2)
+        a1 = parse_input("fact: (at {} {} {})".format(term0, term3, term4))
+        self.kb.kb_assert(a1)
+        a1 = parse_input("fact: (empty {} {})".format(term1, term2))
+        self.kb.kb_assert(a1)
+
+
 
     def reverseMove(self, movable_statement):
         """
