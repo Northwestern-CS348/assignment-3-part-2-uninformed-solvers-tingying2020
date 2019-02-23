@@ -47,6 +47,7 @@ class SolverDFS(UninformedSolver):
         # print("nextchild", self.currentState.nextChildToVisit, "\n\n")
         # for i in range(self.currentState.nextChildToVisit, len(movables)):
         '''
+        # children have not been visited
         while self.currentState.nextChildToVisit < len(movables):
             # self.currentState.nextChildToVisit += 1
             self.gm.makeMove(movables[self.currentState.nextChildToVisit])
@@ -57,7 +58,7 @@ class SolverDFS(UninformedSolver):
                 self.gm.reverseMove(movables[self.currentState.nextChildToVisit])
                 # self.count -= 1
                 self.currentState.nextChildToVisit += 1
-
+                # go to next child
                 # self.currentState.state = self.gm.getGameState()
             else:
                 self.currentState.nextChildToVisit += 1
@@ -65,8 +66,10 @@ class SolverDFS(UninformedSolver):
                 self.currentState = newState
                 # newState.parent = self.currentState
                 # print(self.currentState.state)
+                # reach to a new child
                 return False
         # if i == len(movables)-1:
+        # go back as all the children have been visited
         self.gm.reverseMove(self.currentState.requiredMovable)
         self.currentState = self.currentState.parent
         # print("go back!")
@@ -152,9 +155,9 @@ class SolverBFS(UninformedSolver):
             # from init state to the state here
             for step in nextState.requiredMovable:
                 self.gm.makeMove(step)
-            print("self.currentState", self.currentState.state)
-            print(self.count, "current state = ", str(nextState.state))
-            print("game state = ", str(self.gm.getGameState()), "\n\n")
+            # print("self.currentState", self.currentState.state)
+            # print(self.count, "current state = ", str(nextState.state))
+            # print("game state = ", str(self.gm.getGameState()), "\n\n")
 
             # get new node and put them into queue
             for movables in self.gm.getMovables():

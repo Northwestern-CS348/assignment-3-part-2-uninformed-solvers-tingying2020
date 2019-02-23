@@ -206,7 +206,37 @@ class Puzzle8Game(GameMaster):
             A Tuple of Tuples that represent the game state
         """
         ### Student code goes here
-        pass
+        return (self.getByRow('pos1'), self.getByRow('pos2'), self.getByRow('pos3'))
+
+    def getByRow(self, rowNum):
+        rowPuzzle = []
+        ask1 = parse_input("fact: (at ?X pos1 {})".format(rowNum))
+        answer1 = self.kb.kb_ask(ask1)
+        if answer1 == False:
+            rowPuzzle.append(-1)
+        else:
+            tile1 = answer1.list_of_bindings[0][0].bindings_dict['?X']
+            rowPuzzle.append(int(tile1[4:]))
+
+        ask2 = parse_input("fact: (at ?X pos2 {})".format(rowNum))
+        answer2 = self.kb.kb_ask(ask2)
+        if answer2 == False:
+            rowPuzzle.append(-1)
+        else:
+            tile2 = answer2.list_of_bindings[0][0].bindings_dict['?X']
+            rowPuzzle.append(int(tile2[4:]))
+
+        ask3 = parse_input("fact: (at ?X pos3 {})".format(rowNum))
+        answer3 = self.kb.kb_ask(ask3)
+        if answer3 == False:
+            rowPuzzle.append(-1)
+        else:
+            tile3 = answer3.list_of_bindings[0][0].bindings_dict['?X']
+            rowPuzzle.append(int(tile3[4:]))
+
+        return tuple(rowPuzzle)
+
+
 
     def makeMove(self, movable_statement):
         """
