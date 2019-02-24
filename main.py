@@ -37,7 +37,7 @@ class KBTest(unittest.TestCase):
         """
         solver.solve()
 
-    def runPlayXSteps(self, solver, plays, timeout=5):
+    def runPlayXSteps(self, solver, plays, timeout=15):
         """
         Wrapper function; calls playXSteps(..) with a timeout
 
@@ -54,7 +54,7 @@ class KBTest(unittest.TestCase):
         except TimeoutError:
             raise Exception("Timed out: %s" % inspect.stack()[1][3])
 
-    def runSolve(self, solver, timeout=5):
+    def runSolve(self, solver, timeout=15):
         """
         Wrapper function; calls solve(..) with a timeout
 
@@ -70,7 +70,7 @@ class KBTest(unittest.TestCase):
 
     def test01_GM_Hanoi(self):
         th = TowerOfHanoiGame()
-        th.read('hanoi_3_all_disks_on_peg_one.txt')
+        th.read('hanoi_5_smallest_on_three_second_smallest_on_two.txt')
         required = [
             'fact: (movable disk1 peg3 peg1)',
             'fact: (movable disk1 peg3 peg2)',
@@ -87,7 +87,7 @@ class KBTest(unittest.TestCase):
 
     def test02_DFS_Hanoi(self):
         th = TowerOfHanoiGame()
-        th.read('hanoi_3_all_disks_on_peg_one.txt')
+        th.read('hanoi_5_all_disks_on_peg_one.txt')
         required = [
             'fact: (movable disk1 peg3 peg1)',
             'fact: (movable disk1 peg3 peg2)',
@@ -106,7 +106,7 @@ class KBTest(unittest.TestCase):
 
     def test03_DFS_Hanoi(self):
         th = TowerOfHanoiGame()
-        th.read('hanoi_3_all_disks_on_peg_one.txt')
+        th.read('hanoi_5_two_smallest_on_peg_three.txt')
         required = [
             'fact: (movable disk1 peg3 peg1)',
             'fact: (movable disk1 peg3 peg2)',
@@ -114,12 +114,12 @@ class KBTest(unittest.TestCase):
         th.setWinningCondition(required, 'hanoi_all_forbidden.txt')
         self.assertFalse(th.isWon())
 
-        solver = SolverDFS(th, ((),(),(1,2,3)))
+        solver = SolverDFS(th, ((),(),(1,2,3,4,5)))
         self.runSolve(solver)
 
     def test04_BFS_Hanoi(self):
         th = TowerOfHanoiGame()
-        th.read('hanoi_3_all_disks_on_peg_one.txt')
+        th.read('hanoi_5_all_disks_on_peg_one.txt')
         required = [
             'fact: (movable disk1 peg3 peg1)',
             'fact: (movable disk1 peg3 peg2)',
@@ -138,7 +138,7 @@ class KBTest(unittest.TestCase):
 
     def test05_BFS_Hanoi(self):
         th = TowerOfHanoiGame()
-        th.read('hanoi_3_all_disks_on_peg_one.txt')
+        th.read('hanoi_5_two_smallest_on_peg_three.txt')
         required = [
             'fact: (movable disk1 peg3 peg1)',
             'fact: (movable disk1 peg3 peg2)',
@@ -146,7 +146,7 @@ class KBTest(unittest.TestCase):
         th.setWinningCondition(required, 'hanoi_all_forbidden.txt')
         self.assertFalse(th.isWon())
 
-        solver = SolverBFS(th, ((),(),(1,2,3)))
+        solver = SolverBFS(th, ((),(),(1,2,3,4,5)))
         self.runSolve(solver,)
 
     def test06_GM_8Puzzle(self):
